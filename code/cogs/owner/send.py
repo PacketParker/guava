@@ -8,7 +8,7 @@ class Send(commands.Cog):
     @commands.command()
     @commands.dm_only()
     @commands.is_owner()
-    async def send(self, ctx, user_id: int, message: str):
+    async def send(self, ctx, user_id: int, *, message: str):
         """Send a message to a user (follow-up on bug reports)"""
         user = await self.bot.fetch_user(user_id)
 
