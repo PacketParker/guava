@@ -10,7 +10,7 @@ class Send(commands.Cog):
     @commands.is_owner()
     async def send(self, ctx, user_id: int, message: str):
         """Send a message to a user (follow-up on bug reports)"""
-        user = self.bot.get_user(user_id)
+        user = await self.bot.fetch_user(user_id)
 
         if not user:
             return await ctx.send("User not found.")
@@ -20,6 +20,7 @@ class Send(commands.Cog):
 
         try:
             await user.send(message)
+            await ctx.send("Message sent to user.")
         except Exception as e:
             await ctx.send("Error sending message to user.")
 
