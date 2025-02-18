@@ -56,7 +56,8 @@ commands_and_descriptions = {
     },
     "autoplay": {
         "description": (
-            "Keep the music playing forever with music suggestions from OpenAI"
+            "Keep the music playing forever with automatic song"
+            " recommendations"
         ),
         "arguments": {
             "on": "Turn autoplay feature on",

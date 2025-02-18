@@ -245,7 +245,7 @@ class Music(commands.Cog):
             for song in event.player.queue[:10]:
                 inputs[song.title] = song.author
             await add_song_recommendations(
-                self.bot.openai, self.bot.user, event.player, 5, inputs
+                self.bot.user, event.player, 5, inputs
             )
 
     @lavalink.listener(lavalink.events.NodeConnectedEvent)

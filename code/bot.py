@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands, tasks
 import os
 import requests
-import openai
 import lyricsgenius
 
 import utils.config as config
@@ -20,13 +19,10 @@ class MyBot(commands.Bot):
         )
 
     async def setup_hook(self):
-        # Get Spotify, Apple Music, Genius, and OpenAI access tokens/clients
+        # Get Spotify, Apple Music, and Genius access tokens/clients
         get_access_token.start()
         refresh_media_api_key.start()
         login_genius.start()
-        if config.OPENAI_API_KEY:
-            bot.openai = openai.OpenAI(api_key=config.OPENAI_API_KEY)
-
         config.LOG.info("Loading cogs...")
         config.LOG.info(
             "YouTube support is enabled, make sure to set a poToken"
@@ -59,9 +55,9 @@ class MyBot(commands.Bot):
                     )
                     continue
                 # Load the OPTIONAL autoplay cog
-                if ext[:-3] == "autoplay" and config.OPENAI_API_KEY == None:
+                if ext[:-3] == "autoplay" and config.AI_CLIENT == None:
                     config.LOG.info(
-                        "Skipped loading autoplay cog - OpenAI API credentials"
+                        "Skipped loading autoplay cog - AI API credentials"
                         " not provided"
                     )
                     continue

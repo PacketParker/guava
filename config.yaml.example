@@ -22,5 +22,6 @@ genius:
     genius_client_id: 
     genius_client_secret: 
 
-openai:
-    openai_api_key: 
+ai:
+    service: 
+    api_key: 

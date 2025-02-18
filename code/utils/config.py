@@ -8,7 +8,7 @@ import sys
 import discord
 import logging
 import requests
-from datetime import datetime
+from groq import Groq
 from colorlog import ColoredFormatter
 
 log_level = logging.DEBUG
@@ -39,7 +39,8 @@ SPOTIFY_CLIENT_ID = None
 SPOTIFY_CLIENT_SECRET = None
 GENIUS_CLIENT_ID = None
 GENIUS_CLIENT_SECRET = None
-OPENAI_API_KEY = None
+AI_CLIENT = None
+AI_MODEL = None
 LAVALINK_HOST = None
 LAVALINK_PORT = None
 LAVALINK_PASSWORD = None
@@ -82,12 +83,13 @@ schema = {
             },
             "required": ["genius_client_id", "genius_client_secret"],
         },
-        "openai": {
+        "ai": {
             "type": "object",
             "properties": {
-                "openai_api_key": {"type": "string"},
+                "service": {"enum": ["openai", "groq"]},
+                "api_key": {"type": "string"},
             },
-            "required": ["openai_api_key"],
+            "required": ["service"],
         },
         "lavalink": {
             "type": "object",
@@ -144,9 +146,9 @@ genius:
     genius_client_id: 
     genius_client_secret: 
 
-openai:
-    openai_api_key: 
-                """
+ai:
+    service: 
+    api_key: """
             )
 
         sys.exit(
@@ -160,7 +162,7 @@ openai:
 
 # Thouroughly validate all of the options in the config.yaml file
 def validate_config(file_contents):
-    global TOKEN, BOT_COLOR, BOT_INVITE_LINK, FEEDBACK_CHANNEL_ID, BUG_CHANNEL_ID, LOG_SONGS, YOUTUBE_SUPPORT, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, GENIUS_CLIENT_ID, GENIUS_CLIENT_SECRET, OPENAI_API_KEY, LAVALINK_HOST, LAVALINK_PORT, LAVALINK_PASSWORD
+    global TOKEN, BOT_COLOR, BOT_INVITE_LINK, FEEDBACK_CHANNEL_ID, BUG_CHANNEL_ID, LOG_SONGS, YOUTUBE_SUPPORT, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, GENIUS_CLIENT_ID, GENIUS_CLIENT_SECRET, AI_CLIENT, AI_MODEL, LAVALINK_HOST, LAVALINK_PORT, LAVALINK_PASSWORD
     config = yaml.safe_load(file_contents)
 
     try:
@@ -270,17 +272,24 @@ def validate_config(file_contents):
             )
 
     #
-    # If the OPENAI section is present, make sure the API key is valid
+    # If the AI section is present, make sure the API key is valid
     #
 
-    if "openai" in config:
-        client = openai.OpenAI(api_key=config["openai"]["openai_api_key"])
+    if "ai" in config:
+        if config["ai"]["service"] == "openai":
+            client = openai.OpenAI(api_key=config["ai"]["api_key"])
+            model = "gpt-4o-mini"
+        elif config["ai"]["service"] == "groq":
+            client = Groq(api_key=config["ai"]["api_key"])
+            model = "llama-3.3-70b-specdec"
+
         try:
             client.models.list()
-            OPENAI_API_KEY = config["openai"]["openai_api_key"]
+            AI_CLIENT = client
+            AI_MODEL = model
         except openai.AuthenticationError:
             LOG.critical(
-                "Error in config.yaml file: OpenAI API key is invalid"
+                "Error in config.yaml file: OpenAI/Groq API key is invalid"
             )
 
     # Set appropriate values for all non-optional variables

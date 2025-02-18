@@ -1,40 +1,52 @@
 from lavalink import LoadType
 import re
 
+from utils.config import AI_CLIENT, AI_MODEL
+
 
 async def add_song_recommendations(
-    openai_client, bot_user, player, number, inputs, retries: int = 1
+    bot_user, player, number, inputs, retries: int = 1
 ):
     input_list = [f'"{song} by {artist}"' for song, artist in inputs.items()]
 
     completion = (
-        openai_client.chat.completions.create(
+        AI_CLIENT.chat.completions.create(
             messages=[
+                {
+                    "role": "system",
+                    "content": f"""
+                        Given an input list of songs formatted as ["song_name
+                        by artist_name", "song_name by artist_name", ...], generate
+                        a list of 5 new songs that the user may enjoy based on
+                        the input.
+
+                        Thoroughly analyze each song in the input list, considering
+                        factors such as tempo, beat, mood, genre, lyrical themes,
+                        instrumentation, and overall meaning. Use this analysis to
+                        recommend 5 songs that closely align with the user's musical
+                        preferences.
+
+                        The output must be formatted in the exact same way:
+                        ["song_name by artist_name", "song_name by artist_name", ...].
+
+                        If you are unable to find 5 new songs or encounter any issues,
+                        return the following list instead: ["NOTHING_FOUND"]. Do
+                        not return partial results—either provide 5 songs or return
+                        ["NOTHING_FOUND"]. Ensure accuracy in song and artist names.
+
+                        DO NOT include any additional information or text in the
+                        output, it should STRICTLY be either a list of the songs
+                        or ["NOTHING_FOUND"].
+                    """,
+                },
                 {
                     "role": "user",
                     "content": f"""
-                        BACKGROUND: You're an AI music recommendation system with a knack for understanding
-                        user preferences based on provided input. Your task is to generate a list
-                        of {number} songs that the user might enjoy, derived from a given list of {number} songs.
-                        The input will be in the format of
-                            ["Song-1-Name by Song-1-Artist", "Song-2-Name by Song-2-Artist", ...]
-                        and you need to return a list formatted in the same way.
-
-                        When recommending songs, consider the genre, tempo, and mood of the input
-                        songs to suggest similar ones that align with the user's tastes. Also, it
-                        is important to mix up the artists, don't only give the same artists that
-                        are already in the queue. If you cannot find {number} songs that match the
-                        criteria or encounter any issues, return the list ["NOTHING FOUND"].
-
-                        Please be sure to also only use characters A-Z, a-z, 0-9, and spaces in the
-                        song and artist names. Do not include escape/special characters, emojis, or
-                        quotes in the output.
-
-                        INPUT: {input_list}
+                        {input_list}
                     """,
-                }
+                },
             ],
-            model="gpt-4o-mini",
+            model=AI_MODEL,
         )
         .choices[0]
         .message.content.strip()
@@ -47,7 +59,7 @@ async def add_song_recommendations(
     if completion == '["NOTHING FOUND"]':
         if retries <= 3:
             await add_song_recommendations(
-                openai_client, bot_user, player, number, inputs, retries + 1
+                bot_user, player, number, inputs, retries + 1
             )
         else:
             return False

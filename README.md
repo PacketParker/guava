@@ -106,10 +106,11 @@ Field | Description | Requirement
 GENIUS_CLIENT_ID | `CLIENT ID`: ID from Genius API Dashboard | **OPTIONAL** - *Used for the /lyrics command*
 GENIUS_CLIENT_SECRET | `CLIENT SECRET`: Secret string from Genius API Dashboard | **OPTIONAL** - *Used for the /lyrics command*
 
-## OPENAI | OPTIONAL
+## AI | OPTIONAL
 Field | Description | Requirement
 --- | --- | ---
-OPENAI_API_KEY | API Key from OpenAI for autoplay recommendations | **OPTIONAL** - *Used to support the /autoplay feature*
+SERVICE | Which providers API you will use. Supports `groq` or `openai` | **OPTIONAL** - *Used to support the /autoplay feature*
+API_KEY | API key for the provider you are using | **OPTIONAL** - *Used to support the /autoplay feature*
 
 <br>
 

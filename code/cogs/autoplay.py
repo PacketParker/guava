@@ -75,9 +75,7 @@ class Autoplay(commands.Cog):
         )
         await interaction.response.send_message(embed=embed)
 
-        if await add_song_recommendations(
-            self.bot.openai, self.bot.user, player, 5, inputs
-        ):
+        if await add_song_recommendations(self.bot.user, player, 5, inputs):
             self.bot.autoplay.append(interaction.guild.id)
             embed = create_embed(
                 title=":infinity: Autoplay Enabled :infinity:",
