@@ -19,7 +19,12 @@ class Toggle(commands.Cog):
             self.bot.youtube_broken = True
             return await ctx.send("YouTube has been marked as broken.")
 
-        await ctx.send("Invalid action. Please use 'on' or 'off'.")
+    @toggle.error
+    async def toggle_error(self, ctx, error):
+        if isinstance(error, commands.BadLiteralArgument):
+            return await ctx.send("Invalid action. Use either 'on' or 'off'.")
+        else:
+            return await ctx.send("An unknown error occurred.")
 
 
 async def setup(bot):
