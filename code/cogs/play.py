@@ -6,7 +6,7 @@ from lavalink import LoadType
 import re
 
 from cogs.music import Music, LavalinkVoiceClient
-from utils.config import YOUTUBE_SUPPORT, YOUTUBE_BROKEN, create_embed
+from utils.config import YOUTUBE_SUPPORT, create_embed
 from utils.custom_sources import (
     LoadError,
     CustomAudioTrack,
@@ -45,7 +45,7 @@ class Play(commands.Cog):
                     embed=embed, ephemeral=True
                 )
 
-            if YOUTUBE_BROKEN:
+            if self.bot.youtube_broken:
                 embed = create_embed(
                     title="YouTube Broken",
                     description=(
