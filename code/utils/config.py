@@ -44,6 +44,7 @@ AI_MODEL = None
 LAVALINK_HOST = None
 LAVALINK_PORT = None
 LAVALINK_PASSWORD = None
+YOUTUBE_BROKEN = False
 
 schema = {
     "type": "object",
@@ -162,7 +163,7 @@ ai:
 
 # Thouroughly validate all of the options in the config.yaml file
 def validate_config(file_contents):
-    global TOKEN, BOT_COLOR, BOT_INVITE_LINK, FEEDBACK_CHANNEL_ID, BUG_CHANNEL_ID, LOG_SONGS, YOUTUBE_SUPPORT, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, GENIUS_CLIENT_ID, GENIUS_CLIENT_SECRET, AI_CLIENT, AI_MODEL, LAVALINK_HOST, LAVALINK_PORT, LAVALINK_PASSWORD
+    global TOKEN, BOT_COLOR, BOT_INVITE_LINK, FEEDBACK_CHANNEL_ID, BUG_CHANNEL_ID, LOG_SONGS, YOUTUBE_SUPPORT, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, GENIUS_CLIENT_ID, GENIUS_CLIENT_SECRET, AI_CLIENT, AI_MODEL, LAVALINK_HOST, LAVALINK_PORT, LAVALINK_PASSWORD, YOUTUBE_BROKEN
     config = yaml.safe_load(file_contents)
 
     try:
@@ -297,6 +298,8 @@ def validate_config(file_contents):
     LAVALINK_HOST = config["lavalink"]["host"]
     LAVALINK_PORT = config["lavalink"]["port"]
     LAVALINK_PASSWORD = config["lavalink"]["password"]
+
+    YOUTUBE_BROKEN = False
 
 
 """

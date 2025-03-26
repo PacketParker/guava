@@ -6,7 +6,7 @@ from lavalink import LoadType
 import re
 
 from cogs.music import Music, LavalinkVoiceClient
-from utils.config import YOUTUBE_SUPPORT, create_embed
+from utils.config import YOUTUBE_SUPPORT, YOUTUBE_BROKEN, create_embed
 from utils.custom_sources import (
     LoadError,
     CustomAudioTrack,
@@ -39,6 +39,22 @@ class Play(commands.Cog):
                         " different platform, or simply type the name of the"
                         " song and I will automatically find it on a supported"
                         " platform."
+                    ),
+                )
+                return await interaction.response.send_message(
+                    embed=embed, ephemeral=True
+                )
+
+            if YOUTUBE_BROKEN:
+                embed = create_embed(
+                    title="YouTube Broken",
+                    description=(
+                        "YouTube support is currently broken. This is a known"
+                        " issue and is being actively worked on, please try"
+                        " again later. Other sources should still be in"
+                        " working order. Submit a bug report with "
+                        " </bug:1224840889906499626> if issues persist. Sorry"
+                        " for the inconvenience."
                     ),
                 )
                 return await interaction.response.send_message(
