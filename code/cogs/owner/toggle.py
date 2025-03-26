@@ -1,7 +1,7 @@
 from discord.ext import commands
 from typing import Literal
 
-import utils.config as config
+from utils.config import YOUTUBE_SUPPORT, YOUTUBE_BROKEN
 
 
 class Toggle(commands.Cog):
@@ -16,18 +16,18 @@ class Toggle(commands.Cog):
     ):
         """Toggle YouTube links"""
         if action == "disable":
-            config.YOUTUBE_SUPPORT = False
-            config.YOUTUBE_BROKEN = False
+            YOUTUBE_SUPPORT = False
+            YOUTUBE_BROKEN = False
             return await ctx.send("YouTube has been disabled.")
 
         if action == "enable":
-            config.YOUTUBE_SUPPORT = True
-            config.YOUTUBE_BROKEN = False
+            YOUTUBE_SUPPORT = True
+            YOUTUBE_BROKEN = False
             return await ctx.send("YouTube has been enabled.")
 
         if action == "broken":
-            config.YOUTUBE_SUPPORT = False
-            config.YOUTUBE_BROKEN = True
+            YOUTUBE_SUPPORT = False
+            YOUTUBE_BROKEN = True
             return await ctx.send("YouTube has been marked as broken.")
 
 
