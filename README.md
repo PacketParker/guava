@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <img src="guava.png" width="300" alt="Guava Image"></a>
+  <img src="https://git.pkrm.dev/guava/tree/guava.png" width="300" alt="Guava Image"></a>
   <br>
   Guava<br>
 </h1>
